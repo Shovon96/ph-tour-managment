@@ -1,6 +1,6 @@
 import cors from 'cors'
 import express, { Request, Response } from 'express'
-import { UserRouters } from './app/modules/users/user.routers';
+import { router } from './app/routes';
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(cors())
 
 // Routes
-app.use('/api/v1/user', UserRouters)
+app.use('/api/v1', router)
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
