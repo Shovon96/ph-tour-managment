@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import statusCode from 'http-status-codes'
 import { UserServices } from "./user.service";
+import AppError from "../../errorHalpers/AppError";
 
-const createUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await UserServices.createUser(req.body);
         res.status(statusCode.CREATED).json({
@@ -10,11 +11,7 @@ const createUser = async (req: Request, res: Response) => {
             user
         })
     } catch (error) {
-        console.log(error)
-        res.status(statusCode.BAD_REQUEST).json({
-            message: 'Something went wrong create user',
-            error
-        })
+        next(error)
     }
 }
 
