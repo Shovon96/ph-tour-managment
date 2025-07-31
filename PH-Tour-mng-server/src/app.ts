@@ -3,12 +3,14 @@ import express, { Request, Response } from 'express'
 import { router } from './app/routes';
 import { globalErrorHandler } from './app/middlewares/globalError';
 import notFound from './app/middlewares/notFound.route';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 // Middleware
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
 
 // Routes
 app.use('/api/v1', router)

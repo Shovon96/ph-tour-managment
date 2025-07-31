@@ -3,9 +3,20 @@ import { catchAsync } from "../../utils/catchAsync";
 import { AuthService } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
 import statusCode from 'http-status-codes'
+import AppError from "../../errorHalpers/AppError";
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const loginInfo = await AuthService.credentialsLogin(req.body)
+
+    res.cookie('accessToken', loginInfo.accessToken, {
+        httpOnly: true,
+        secure: false
+    })
+
+    res.cookie('refreshToken', loginInfo.refreshToken, {
+        httpOnly: true,
+        secure: false
+    })
 
     sendResponse(res, {
         success: true,
@@ -15,6 +26,23 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
     })
 })
 
+const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const refreshToken = req.cookies.refreshToken
+    if (!refreshToken) {
+        throw new AppError(statusCode.BAD_REQUEST, 'No refresh token recive from cookies!')
+    }
+    const tokenInfo = await AuthService.getNewAccessToken(refreshToken);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.OK,
+        message: "User Logged In Successfully",
+        data: tokenInfo,
+    })
+})
+
 export const AuthControllers = {
-    credentialsLogin
+    credentialsLogin,
+    getNewAccessToken
 }
