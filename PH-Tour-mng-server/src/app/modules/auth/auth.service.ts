@@ -6,6 +6,7 @@ import { IUser } from "../users/user.interface";
 import { User } from "../users/user.model";
 import { generateToken } from "../../utils/jwtTokenGen";
 import { envVars } from "../../config/env";
+import { createUserTokens } from "../../utils/userTokens";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
     const { email, password } = payload;
@@ -20,15 +21,14 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(statusCode.BAD_REQUEST, "Password is wrong!")
     }
 
-    const jwtPayload = {
-        userId: isUserExist._id,
-        email: isUserExist.email,
-        role: isUserExist.role
-    }
+    const userTokens = createUserTokens(isUserExist)
+    const { password: pass, ...rest } = isUserExist.toObject()
 
-    const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_TOKEN, envVars.JWT_TOKEN_EXPIRES)
-
-    return { accessToken };
+    return {
+        accessToken: userTokens.accessToken,
+        refreshToken: userTokens.refreshToken,
+        user: rest
+    };
 }
 
 export const AuthService = {
