@@ -14,5 +14,6 @@ router.post('/create',
 )
 
 router.get('/', DivisionController.getAllDivisions)
+router.get('/:slug', DivisionController.getSingleDivision)
 
 export const DivisionRoutes = router
