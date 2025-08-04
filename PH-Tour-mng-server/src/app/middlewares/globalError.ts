@@ -3,7 +3,7 @@ import { envVars } from "../config/env";
 import AppError from "../errorHalpers/AppError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    let errorSource = []
+    let errorSource : any = []
     let statusCode = 500
     let message = "Something went wrong"
 
@@ -17,6 +17,17 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     else if (err.name === "CastError") {
         statusCode = 400
         message = "Invalid user Id. Please provide a valid Id"
+    }
+    // Zod Validation Error
+    else if (err.name === "ZodError") {
+        statusCode = 400;
+        message = "Zod Error"
+        err.issues.forEach((issue: any) => {
+            errorSource.push({
+                path: issue.path[issue.path - 1],
+                message: issue.message
+            })
+        })
     }
     // Mongoose Validation Error
     else if (err.name === "ValidationError") {
@@ -40,7 +51,8 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     res.status(statusCode).json({
         success: false,
         message,
-        err,
+        // err,
+        errorSource,
         stack: envVars.NODE_ENV === 'development' ? err.stack : null
     })
 }
