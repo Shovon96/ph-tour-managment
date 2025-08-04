@@ -1,43 +1,43 @@
 import { NextFunction, Request, Response } from "express";
 import { envVars } from "../config/env";
 import AppError from "../errorHalpers/AppError";
+import { TErrorSources } from "../interface/error.types";
+import { handleDuplicateError } from "../helperErrors/duplicateError";
+import { handleCastError } from "../helperErrors/castError";
+import { handleZodValidationError } from "../helperErrors/zodValidationError";
+import { handleMogooseValidationError } from "../helperErrors/mongooseError";
+
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-    let errorSource : any = []
+    let errorSources: TErrorSources[] = []
     let statusCode = 500
     let message = "Something went wrong"
 
     // Duplicate Error
     if (err === 11000) {
-        const matchedArray = err.message.match(/"([^"]*)"/)
-        statusCode = 400;
-        message = `${matchedArray[1]} are already exist!`
+        const simplifiedError = handleDuplicateError(err)
+        statusCode = simplifiedError.statusCode
+        message = simplifiedError.message
     }
     // Object Id / Cast error
     else if (err.name === "CastError") {
-        statusCode = 400
-        message = "Invalid user Id. Please provide a valid Id"
+        const simplifiedError = handleCastError(err)
+        statusCode = simplifiedError.statusCode
+        message = simplifiedError.message
     }
     // Zod Validation Error
     else if (err.name === "ZodError") {
-        statusCode = 400;
-        message = "Zod Error"
-        err.issues.forEach((issue: any) => {
-            errorSource.push({
-                path: issue.path[issue.path - 1],
-                message: issue.message
-            })
-        })
+        const simplifiedError = handleZodValidationError(err)
+        statusCode = simplifiedError.statusCode
+        message = simplifiedError.message
+        errorSources = simplifiedError.errorSources as TErrorSources[]
     }
     // Mongoose Validation Error
     else if (err.name === "ValidationError") {
-        statusCode = 400;
-        const errors = Object.values(err.errors)
-        errors.forEach((errObject: any) => errorSource.push({
-            path: errObject.path,
-            message: errObject.message
-        }))
-        message = "Validation Error"
+        const simplifiedError = handleMogooseValidationError(err)
+        statusCode = simplifiedError.statusCode
+        message = simplifiedError.message
+        errorSources = simplifiedError.errorSources as TErrorSources[]
     }
     else if (err instanceof AppError) {
         statusCode = err.statusCode
@@ -51,8 +51,8 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     res.status(statusCode).json({
         success: false,
         message,
-        // err,
-        errorSource,
+        errorSources,
+        err: envVars.NODE_ENV === 'development' ? err : null,
         stack: envVars.NODE_ENV === 'development' ? err.stack : null
     })
 }
