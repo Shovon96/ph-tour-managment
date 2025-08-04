@@ -1,6 +1,7 @@
 import AppError from "../../errorHalpers/AppError";
 import { IDivision } from "./division.interface";
 import { Division } from "./division.model";
+import statusCode from 'http-status-codes'
 
 const createDivision = async (payload: IDivision) => {
     const existingDisvision = await Division.findOne({ name: payload.name })
@@ -28,8 +29,27 @@ const getSingleDivision = async (slug: string) => {
     }
 }
 
+const updateDivision = async (id: string, payload: Partial<IDivision>) => {
+    const existingDisvision = await Division.findById(id)
+    if (!existingDisvision) {
+        throw new AppError(statusCode.NOT_FOUND, "Division Not Found")
+    }
+
+    const duplicateDivision = await Division.findOne({
+        name: payload.name,
+        _id: { $ne: id }
+    })
+    if (duplicateDivision) {
+        throw new AppError(statusCode.BAD_REQUEST, "A division with this name already exists.");
+    }
+
+    const updateDivision = await Division.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
+    return updateDivision
+}
+
 export const DivisionService = {
     createDivision,
     getAllDivisions,
-    getSingleDivision
+    getSingleDivision,
+    updateDivision
 }
