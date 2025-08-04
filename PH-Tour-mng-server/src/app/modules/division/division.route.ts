@@ -13,4 +13,6 @@ router.post('/create',
     DivisionController.createDivision
 )
 
+router.get('/', DivisionController.getAllDivisions)
+
 export const DivisionRoutes = router

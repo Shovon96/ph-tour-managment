@@ -13,7 +13,19 @@ const createDivision = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
+    const result = await DivisionService.getAllDivisions()
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Get all division retrive successfully!",
+        data: result.data,
+        meta: result.meta
+    });
+})
+
 
 export const DivisionController = {
-    createDivision
+    createDivision,
+    getAllDivisions
 }
