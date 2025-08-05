@@ -5,7 +5,6 @@ import { TourService } from "./tour.service";
 
 const createTourType = catchAsync(async (req: Request, res: Response) => {
     const { name } = req.body
-    console.log('name form contorller', name)
     const result = await TourService.createTourType(name)
     sendResponse(res, {
         statusCode: 201,
@@ -25,8 +24,21 @@ const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const updateTourTypes = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+    const { name } = req.body
+    const result = await TourService.updateTourTypes(id, name)
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Tour type updated successfully!',
+        data: result,
+    });
+})
+
 
 export const TourController = {
     createTourType,
-    getAllTourTypes
+    getAllTourTypes,
+    updateTourTypes
 }

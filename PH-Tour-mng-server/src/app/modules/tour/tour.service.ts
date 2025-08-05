@@ -16,8 +16,18 @@ const getAllTourTypes = async () => {
     return tourTypes
 }
 
+const updateTourTypes = async (id: string, payload: ITourType) => {
+    const isExistTourType = await TourType.findById(id)
+    if (!isExistTourType) {
+        throw new AppError(400, "This tour type dose not exist!")
+    }
+    const updateTourTypes = await TourType.findByIdAndUpdate(id, { name: payload }, { new: true })
+    return updateTourTypes
+}
+
 
 export const TourService = {
     createTourType,
-    getAllTourTypes
+    getAllTourTypes,
+    updateTourTypes
 }
