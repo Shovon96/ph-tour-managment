@@ -14,5 +14,6 @@ router.post('/create-tour-type',
     validateRequest(createTourTypeZodSchema),
     TourController.createTourType
 )
+router.get('/tour-types', TourController.getAllTourTypes)
 
 export const TourRoutes = router;
