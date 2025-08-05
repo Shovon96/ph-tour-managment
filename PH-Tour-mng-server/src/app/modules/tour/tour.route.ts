@@ -22,4 +22,6 @@ router.patch('/tour-types/:id',
     TourController.updateTourTypes
 )
 
+router.delete('/tour-types/:id', TourController.deleteTourType)
+
 export const TourRoutes = router;
