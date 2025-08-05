@@ -1,8 +1,10 @@
 import { model, Schema, Types } from "mongoose";
 import { ITour, ITourType } from "./tour.interface";
 
-const tourTypeSchema = new Schema<ITourType> ({
-    name: {type: String, required: true}
+const tourTypeSchema = new Schema<ITourType>({
+    name: { type: String, required: true }
+}, {
+    timestamps: true
 })
 
 export const TourType = model<ITourType>("TourType", tourTypeSchema)
@@ -10,7 +12,7 @@ export const TourType = model<ITourType>("TourType", tourTypeSchema)
 
 const tourSchema = new Schema<ITour>({
     title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, unique: true },
     description: { type: String },
     images: { type: [String], default: [] },
     location: { type: String },
