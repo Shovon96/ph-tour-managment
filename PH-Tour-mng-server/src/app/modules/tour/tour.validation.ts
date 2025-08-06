@@ -7,6 +7,7 @@ export const tourTypeZodSchema = z.object({
 
 export const createTourZodSchema = z.object({
     title: z.string(),
+    slug: z.string().optional(),
     description: z.string().optional(),
     location: z.string().optional(),
     costFrom: z.number().optional(),

@@ -62,6 +62,14 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
     return updateTour
 }
 
+const deleteTour = async (id: string) => {
+    const isExistTour = await Tour.findById(id)
+    if (!isExistTour) {
+        throw new AppError(400, "This tour dose not exist!")
+    }
+    const deleteTour = await Tour.findByIdAndDelete(id)
+    return deleteTour
+}
 
 export const TourService = {
     // Tour Type Function
@@ -73,5 +81,6 @@ export const TourService = {
     // Tour Function
     createTour,
     getAllTours,
-    updateTour
+    updateTour,
+    deleteTour
 }
