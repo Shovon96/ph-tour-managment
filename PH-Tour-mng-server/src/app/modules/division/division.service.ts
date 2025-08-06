@@ -9,15 +9,6 @@ const createDivision = async (payload: IDivision) => {
         throw new AppError(400, "This division name already exist!")
     }
 
-    const baseSlug = payload.name.toLowerCase().split(" ").join("-")
-    let slug = `${baseSlug}-division`
-
-    let counter = 1
-    while (await Division.exists({ slug })) {
-        slug = `${slug}-${counter++}`
-    }
-
-    payload.slug = slug
     const division = Division.create(payload)
     return division
 }

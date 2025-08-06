@@ -67,6 +67,18 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
     if (!isExistTour) {
         throw new AppError(400, "This tour dose not exist!")
     }
+
+    if (payload.title) {
+        let slug = payload.title.toLowerCase().split(" ").join("-")
+
+        let counter = 1
+        while (await Tour.exists({ slug })) {
+            slug = `${slug}-${counter++}`
+        }
+
+        payload.slug = slug
+    }
+
     const updateTour = await Tour.findByIdAndUpdate(id, payload, { new: true })
     return updateTour
 }
