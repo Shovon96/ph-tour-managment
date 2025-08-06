@@ -1,6 +1,8 @@
 import AppError from "../../errorHalpers/AppError";
-import { ITourType } from "./tour.interface";
+import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
+
+// Tour Type Services
 
 const createTourType = async (payload: ITourType) => {
     const isExistTourType = await TourType.findOne({ name: payload })
@@ -35,9 +37,25 @@ const deleteTourType = async (id: string) => {
 }
 
 
+// Tour Services
+
+const createTour = async (payload: ITour) => {
+    const isExistTour = await Tour.findOne({ title: payload.title })
+    if (isExistTour) {
+        throw new AppError(400, "This tour with this name already exist!")
+    }
+    const tour = await Tour.create(payload);
+    return tour
+}
+
+
 export const TourService = {
+    // Tour Type Function
     createTourType,
     getAllTourTypes,
     updateTourTypes,
-    deleteTourType
+    deleteTourType,
+
+    // Tour Function
+    createTour
 }
