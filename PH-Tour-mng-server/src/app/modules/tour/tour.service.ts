@@ -48,6 +48,20 @@ const createTour = async (payload: ITour) => {
     return tour
 }
 
+const getAllTours = async () => {
+    const tours = await Tour.find()
+    return tours
+}
+
+const updateTour = async (id: string, payload: Partial<ITour>) => {
+    const isExistTour = await Tour.findById(id)
+    if (!isExistTour) {
+        throw new AppError(400, "This tour dose not exist!")
+    }
+    const updateTour = await Tour.findByIdAndUpdate(id, payload, { new: true })
+    return updateTour
+}
+
 
 export const TourService = {
     // Tour Type Function
@@ -57,5 +71,7 @@ export const TourService = {
     deleteTourType,
 
     // Tour Function
-    createTour
+    createTour,
+    getAllTours,
+    updateTour
 }

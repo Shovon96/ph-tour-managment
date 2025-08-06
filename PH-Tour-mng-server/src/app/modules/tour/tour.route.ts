@@ -2,7 +2,7 @@ import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../users/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createTourZodSchema, tourTypeZodSchema } from "./tour.validation";
+import { createTourZodSchema, tourTypeZodSchema, updateTourZodSchema } from "./tour.validation";
 import { TourController } from "./tour.controller";
 
 
@@ -22,7 +22,7 @@ router.patch('/tour-types/:id',
     TourController.updateTourTypes
 )
 
-router.delete('/tour-types/:id', TourController.deleteTourType)
+router.delete('/tour-types/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), TourController.deleteTourType)
 
 
 // -----------Tour Routes-------------
@@ -32,6 +32,13 @@ router.post('/create',
     TourController.createTour
 )
 
+router.get('/', TourController.getAllTours)
+
+router.patch('/:id',
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    validateRequest(updateTourZodSchema),
+    TourController.updateTour
+)
 
 
 
