@@ -44,6 +44,15 @@ const createTour = async (payload: ITour) => {
     if (isExistTour) {
         throw new AppError(400, "This tour with this name already exist!")
     }
+
+    let slug = payload.title.toLowerCase().split(" ").join("-")
+
+    let counter = 1
+    while (await Tour.exists({ slug })) {
+        slug = `${slug}-${counter++}`
+    }
+
+    payload.slug = slug
     const tour = await Tour.create(payload);
     return tour
 }
