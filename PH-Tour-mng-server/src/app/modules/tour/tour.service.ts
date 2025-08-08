@@ -20,6 +20,14 @@ const getAllTourTypes = async () => {
     return tourTypes
 }
 
+const getSingleTourType = async (id: string) => {
+    const tourType = await TourType.findById(id)
+     if (!tourType) {
+        throw new AppError(400, "This tour type dose not exist!")
+    }
+    return { data: tourType }
+}
+
 const updateTourTypes = async (id: string, payload: ITourType) => {
     const isExistTourType = await TourType.findById(id)
     if (!isExistTourType) {
@@ -113,6 +121,14 @@ const getAllTours = async (query: Record<string, string>) => {
     }
 }
 
+const getSingleTour = async (slug: string) => {
+    const tour = await Tour.findOne({ slug })
+    if (!tour) {
+        throw new AppError(400, "This tour dose not exist with this name.")
+    }
+    return { tour }
+}
+
 const updateTour = async (id: string, payload: Partial<ITour>) => {
     const isExistTour = await Tour.findById(id)
     if (!isExistTour) {
@@ -136,12 +152,14 @@ export const TourService = {
     // Tour Type Function
     createTourType,
     getAllTourTypes,
+    getSingleTourType,
     updateTourTypes,
     deleteTourType,
 
     // Tour Function
     createTour,
     getAllTours,
+    getSingleTour,
     updateTour,
     deleteTour
 }
