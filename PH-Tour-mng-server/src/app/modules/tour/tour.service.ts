@@ -1,6 +1,6 @@
 import AppError from "../../errorHalpers/AppError";
 import { QueryBuilder } from "../../utils/queryBuilder";
-import { tourSerchFields } from "./tour.constant";
+import { tourSerchFields, tourTypesSerchFields } from "./tour.constant";
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
 
@@ -15,9 +15,31 @@ const createTourType = async (payload: ITourType) => {
     return tourType
 }
 
-const getAllTourTypes = async () => {
-    const tourTypes = await TourType.find()
-    return tourTypes
+// const getAllTourTypes = async () => {
+//     const tourTypes = await TourType.find()
+//     return tourTypes
+// }
+
+const getAllTourTypes = async (query: Record<string, string>) => {
+
+    const queryBuilder = new QueryBuilder(TourType.find(), query)
+
+    const tourTypes = await queryBuilder
+        .search(tourTypesSerchFields)
+        .filter()
+        .sort()
+        .fields()
+        .paginate()
+
+    const [data, meta] = await Promise.all([
+        tourTypes.build(),
+        queryBuilder.getMeta()
+    ])
+
+    return {
+        data,
+        meta
+    }
 }
 
 const getSingleTourType = async (id: string) => {
