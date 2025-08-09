@@ -16,7 +16,7 @@ const bookingSchema = new Schema<IBooking>({
         type: Schema.Types.ObjectId,
         ref: 'Payment'
     },
-    gestCount: {
+    guestCount: {
         type: Number,
         required: true
     },
