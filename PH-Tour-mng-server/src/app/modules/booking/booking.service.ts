@@ -77,7 +77,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
         session.endSession()
 
         return {
-            payment: sslPayment,
+            paymentURL: sslPayment?.GatewayPageURL,
             booking: updatedBooking
         }
 
