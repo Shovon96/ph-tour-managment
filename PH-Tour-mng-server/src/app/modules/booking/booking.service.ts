@@ -1,6 +1,8 @@
 import AppError from "../../errorHalpers/AppError"
 import { PAYMENT_STATUS } from "../payment/payment.interface"
 import { Payment } from "../payment/payment.model"
+import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface"
+import { SSLService } from "../sslCommerz/sslCommerz.service"
 import { Tour } from "../tour/tour.model"
 import { User } from "../users/user.model"
 import { BOOKING_STATUS, IBooking } from "./booking.interface"
@@ -54,10 +56,30 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
             .populate('tour', 'title costFrom')
             .populate('payment')
 
+        // for sslPayment transaction fullfill
+        const userName = (updatedBooking?.user as any).name
+        const userEmail = (updatedBooking?.user as any).email
+        const userPhone = (updatedBooking?.user as any).phone
+        const userAddress = (updatedBooking?.user as any).address
+
+        const sslPayload: ISSLCommerz = {
+            name: userName,
+            email: userEmail,
+            phone: userPhone,
+            address: userAddress,
+            amount: amount,
+            transactionId: transactionId
+        }
+
+        const sslPayment = await SSLService.sslPaymentInit(sslPayload)
+
         session.commitTransaction() // Transection
         session.endSession()
 
-        return updatedBooking
+        return {
+            payment: sslPayment,
+            booking: updatedBooking
+        }
 
     } catch (error) {
         await session.abortTransaction() // RoleBack
