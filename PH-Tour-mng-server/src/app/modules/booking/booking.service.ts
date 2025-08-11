@@ -108,10 +108,27 @@ const getUserBookings = async (decodedToken: JwtPayload) => {
 
     const bookings = await Booking.find({ user: userId })
     return bookings;
-};
+}
+
+const getSingleBooking = async (bookingId: string, user: JwtPayload) => {
+    const booking = await Booking.findById(bookingId)
+
+    if (!booking) {
+        throw new AppError(statusCode.NOT_FOUND, "Booking not found!");
+    }
+
+    if (booking.user.toString() !== user.userId) {
+        throw new AppError(statusCode.FORBIDDEN, "You are not authorized to view this booking.");
+    }
+
+    return {
+        data: booking
+    }
+}
 
 export const BookingService = {
     createBooking,
     getAllBooking,
-    getUserBookings
+    getUserBookings,
+    getSingleBooking
 }

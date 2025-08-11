@@ -20,11 +20,10 @@ router.get("/my-bookings",
     BookingController.getUserBookings
 );
 
-// api/v1/booking/bookingId
-// router.get("/:bookingId",
-//     checkAuth(...Object.values(Role)),
-//     BookingController.getSingleBooking
-// );
+router.get("/:bookingId",
+    checkAuth(...Object.values(Role)),
+    BookingController.getSingleBooking
+);
 
 // // api/v1/booking/bookingId/status
 // router.patch("/:bookingId/status",
