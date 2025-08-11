@@ -13,14 +13,14 @@ const successPayment = async (query: Record<string, string>) => {
         const updatePayment = await Payment.findOneAndUpdate(
             { transactionId: query.transactionId },
             {status: PAYMENT_STATUS.PAID}, 
-            { new: true, runValidators: true, session })
+            { new: true, runValidators: true, session: session })
 
-        await Booking.findByIdAndUpdate(updatePayment?.booking,
+        const updateBooking = await Booking.findByIdAndUpdate(updatePayment?.booking,
                 { status: BOOKING_STATUS.COMPLETED },
-                { runValidators: true, session }
+                { runValidators: true, session: session }
             )
 
-        session.commitTransaction() // Transection
+        await session.commitTransaction() // Transection
         session.endSession()
 
         return {success: true, message: "Payment Completed Successfully!"}
