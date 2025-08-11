@@ -15,7 +15,18 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const getAllBooking = catchAsync(async (req: Request, res: Response) => {
+    const result = await BookingService.getAllBooking()
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "All Booking Booking Successfully!",
+        data: result,
+    });
+})
+
 
 export const BookingController = {
-    createBooking
+    createBooking,
+    getAllBooking
 }

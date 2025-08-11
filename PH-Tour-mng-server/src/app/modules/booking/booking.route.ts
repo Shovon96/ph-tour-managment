@@ -10,5 +10,10 @@ router.post('/',
     BookingController.createBooking
 )
 
+router.get('/',
+    checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    BookingController.getAllBooking
+)
+
 
 export const BookingRoutes = router

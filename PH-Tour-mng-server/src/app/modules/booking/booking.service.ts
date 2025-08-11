@@ -89,7 +89,17 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
 }
 
+const getAllBooking = async () => {
+    const booking = await Booking.find()
+    const totalBokkings = await Booking.countDocuments()
+    return {
+        data: booking,
+        meta: { total: totalBokkings }
+    }
+}
+
 
 export const BookingService = {
-    createBooking
+    createBooking,
+    getAllBooking
 }
