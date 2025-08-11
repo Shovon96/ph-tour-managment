@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken"
 import AppError from "../../errorHalpers/AppError"
 import { PAYMENT_STATUS } from "../payment/payment.interface"
 import { Payment } from "../payment/payment.model"
@@ -98,8 +99,19 @@ const getAllBooking = async () => {
     }
 }
 
+const getUserBookings = async (decodedToken: JwtPayload) => {
+    const userId = decodedToken.userId;
+
+    if (!userId) {
+        throw new AppError(statusCode.UNAUTHORIZED, "Unauthorized Access.");
+    }
+
+    const bookings = await Booking.find({ user: userId })
+    return bookings;
+};
 
 export const BookingService = {
     createBooking,
-    getAllBooking
+    getAllBooking,
+    getUserBookings
 }
