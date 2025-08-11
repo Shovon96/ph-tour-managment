@@ -126,9 +126,24 @@ const getSingleBooking = async (bookingId: string, user: JwtPayload) => {
     }
 }
 
+const updateBookingStatus = async (bookingId: string, status: string) => {
+    const booking = await Booking.findById(bookingId)
+
+    if (!booking) {
+        throw new AppError(statusCode.NOT_FOUND, "Booking not found!");
+    }
+
+    const updateBookingStatus = await Booking.findByIdAndUpdate(
+        bookingId, { status }, { new: true, runValidators: true });
+    return {
+        updateBookingStatus
+    }
+}
+
 export const BookingService = {
     createBooking,
     getAllBooking,
     getUserBookings,
-    getSingleBooking
+    getSingleBooking,
+    updateBookingStatus
 }

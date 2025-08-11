@@ -50,10 +50,24 @@ const getSingleBooking = catchAsync(async (req: Request, res: Response) => {
 }
 );
 
+const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
+    const bookingId = req.params.bookingId;
+    const { status } = req.body;
+    const updateBooking = await BookingService.updateBookingStatus(bookingId, status);
+    sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Booking status updated successfully",
+        data: updateBooking,
+    });
+}
+);
+
 
 export const BookingController = {
     createBooking,
     getAllBooking,
     getUserBookings,
-    getSingleBooking
+    getSingleBooking,
+    updateBookingStatus
 }
