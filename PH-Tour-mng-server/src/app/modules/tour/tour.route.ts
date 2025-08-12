@@ -4,6 +4,7 @@ import { Role } from "../users/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createTourZodSchema, tourTypeZodSchema, updateTourZodSchema } from "./tour.validation";
 import { TourController } from "./tour.controller";
+import { multerUpload } from "../../config/malta.config";
 
 
 const router = Router()
@@ -29,6 +30,7 @@ router.delete('/tour-types/:id', checkAuth(Role.ADMIN, Role.SUPER_ADMIN), TourCo
 // -----------Tour Routes-------------
 router.post('/create',
     checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+    multerUpload.array("files"),
     validateRequest(createTourZodSchema),
     TourController.createTour
 )
