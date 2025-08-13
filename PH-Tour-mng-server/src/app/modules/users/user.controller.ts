@@ -25,7 +25,7 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     // const token = req.headers.authorization;
     // const verifiedToken = verifyToken(token as string, envVars.JWT_ACCESS_TOKEN) as JwtPayload
     const verifiedToken = req.user
-    const user = await UserServices.updateUser(userId, payload, verifiedToken)
+    const user = await UserServices.updateUser(userId, payload, verifiedToken as JwtPayload)
 
     sendResponse(res, {
         statusCode: statusCode.CREATED,
@@ -36,7 +36,8 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 })
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserServices.getAllUsers()
+    const query = req.query
+    const result = await UserServices.getAllUsers(query as Record<string, string>)
     // console.log(result.meta)
 
     sendResponse(res, {
@@ -48,8 +49,35 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await UserServices.getSingleUser(id)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.CREATED,
+        message: "User Retrieved Successfully",
+        data: result.data
+    })
+})
+
+const myProfile = catchAsync(async (req: Request, res: Response) => {
+    const decodedToken = req.user as JwtPayload
+    const result = await UserServices.myProfile(decodedToken.userId)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.CREATED,
+        message: "My Profile Retrieved Successfully",
+        data: result.data
+    })
+})
+
+
 export const UserControllers = {
     createUser,
     getAllUsers,
-    updateUser
+    updateUser,
+    myProfile,
+    getSingleUser
 }
