@@ -13,6 +13,7 @@ router.post('/logout', AuthControllers.logOut)
 router.post('/set-password', checkAuth(...Object.values(Role)), AuthControllers.setPassword)
 router.post('/chage-password', checkAuth(...Object.values(Role)), AuthControllers.changePassword)
 router.post('/reset-password', checkAuth(...Object.values(Role)), AuthControllers.resetPassword)
+router.post('/forgot-password', AuthControllers.forgotPassword)
 
 router.get("/google", async (req: Request, res: Response, next: NextFunction) => {
     const redirect = req.query.redirect || "/"
