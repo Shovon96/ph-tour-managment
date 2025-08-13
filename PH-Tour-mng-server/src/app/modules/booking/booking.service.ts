@@ -9,11 +9,8 @@ import { User } from "../users/user.model"
 import { BOOKING_STATUS, IBooking } from "./booking.interface"
 import { Booking } from "./booking.model"
 import statusCode from 'http-status-codes'
+import { getTransactionId } from "../../utils/transactionId"
 
-// Generate a Random ID
-const getTransactionId = () => {
-    return `tran_${Date.now()}_${Math.floor(Math.random() * 1000)}`
-}
 
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 

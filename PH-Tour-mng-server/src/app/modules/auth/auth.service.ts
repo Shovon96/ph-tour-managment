@@ -2,7 +2,7 @@ import Jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcryptjs'
 import statusCode from "http-status-codes";
 import AppError from "../../errorHalpers/AppError";
-import { IsActive, IUser } from "../users/user.interface";
+import { IAuthProvider, IsActive, IUser } from "../users/user.interface";
 import { User } from "../users/user.model";
 import { generateToken, verifyToken } from "../../utils/jwtTokenGen";
 import { envVars } from "../../config/env";
@@ -39,12 +39,38 @@ const getNewAccessToken = async (refreshToken: string) => {
 
 }
 
-const resetPassword = async (newPassword: string, oldPassword: string, decodedToken: JwtPayload) => {
-    
+const setPassword = async (userId: string, plainPassword: string) => {
+    const user = await User.findById(userId)
+    if (!user) {
+        throw new AppError(statusCode.UNAUTHORIZED, "User Not Found!")
+    }
+
+    if (user.password && user.auth.some(providerObject => providerObject.provider === 'google')) {
+        throw new AppError(statusCode.BAD_REQUEST, "You have already set you password. Now you can change the password from your profile password update")
+    }
+
+    const hashPassword = await bcrypt.hash(plainPassword, Number(envVars.BCRYPT_SALT_ROUND))
+
+    const credentialProvider: IAuthProvider = {
+        provider: 'credentials',
+        providerId: user.email
+    }
+    const auth: IAuthProvider[] = [...user.auth, credentialProvider]
+
+    user.password = hashPassword
+    user.auth = auth
+
+    await user.save()
+
+
+}
+
+const changePassword = async (newPassword: string, oldPassword: string, decodedToken: JwtPayload) => {
+
     const user = await User.findById(decodedToken.userId);
     const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
 
-    if(!isOldPasswordMatch){
+    if (!isOldPasswordMatch) {
         throw new AppError(statusCode.UNAUTHORIZED, "Old password does not matched!")
     }
 
@@ -52,8 +78,23 @@ const resetPassword = async (newPassword: string, oldPassword: string, decodedTo
     user!.save()
 }
 
+const resetPassword = async (newPassword: string, oldPassword: string, decodedToken: JwtPayload) => {
+
+    // const user = await User.findById(decodedToken.userId);
+    // const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
+
+    // if(!isOldPasswordMatch){
+    //     throw new AppError(statusCode.UNAUTHORIZED, "Old password does not matched!")
+    // }
+
+    // user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+    // user!.save()
+}
+
 export const AuthService = {
     // credentialsLogin,
     getNewAccessToken,
+    setPassword,
+    changePassword,
     resetPassword
 }
