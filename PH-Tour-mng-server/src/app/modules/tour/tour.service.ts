@@ -1,3 +1,4 @@
+import { deleteImageFromCloudinary } from "../../config/cloudinary.config";
 import AppError from "../../errorHalpers/AppError";
 import { QueryBuilder } from "../../utils/queryBuilder";
 import { tourSerchFields, tourTypesSerchFields } from "./tour.constant";
@@ -44,7 +45,7 @@ const getAllTourTypes = async (query: Record<string, string>) => {
 
 const getSingleTourType = async (id: string) => {
     const tourType = await TourType.findById(id)
-     if (!tourType) {
+    if (!tourType) {
         throw new AppError(400, "This tour type dose not exist!")
     }
     return { data: tourType }
@@ -152,12 +153,32 @@ const getSingleTour = async (slug: string) => {
 }
 
 const updateTour = async (id: string, payload: Partial<ITour>) => {
-    const isExistTour = await Tour.findById(id)
-    if (!isExistTour) {
+    const existTour = await Tour.findById(id)
+    if (!existTour) {
         throw new AppError(400, "This tour dose not exist!")
     }
 
+    // Replace the mongodb images url's
+    if (payload.images && payload.images.length > 0 && existTour.images && existTour.images.length > 0) {
+        payload.images = [...payload.images, ...existTour.images]
+    }
+
+    if (payload.deleteImages && payload.deleteImages.length > 0 && existTour.images && existTour.images.length > 0) {
+        const restDBImages = existTour.images.filter(imageUrl => !payload.deleteImages?.includes(imageUrl))
+
+        const updatedPayloadImages = (payload.images || [])
+            .filter(imageUrl => !payload.deleteImages?.includes(imageUrl))
+            .filter(imageUrl => !restDBImages?.includes(imageUrl))
+
+        payload.images = [...restDBImages, ...updatedPayloadImages]
+    }
+
     const updateTour = await Tour.findByIdAndUpdate(id, payload, { new: true })
+
+    if (payload.deleteImages && payload.deleteImages.length > 0 && existTour.images && existTour.images.length > 0) {
+        await Promise.all(payload.deleteImages.map(url => deleteImageFromCloudinary(url)))
+    }
+
     return updateTour
 }
 
