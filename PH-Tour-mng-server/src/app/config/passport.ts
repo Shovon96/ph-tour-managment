@@ -2,9 +2,10 @@ import passport from "passport";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import { envVars } from "./env";
 import { User } from "../modules/users/user.model";
-import { Role } from "../modules/users/user.interface";
+import { IsActive, Role } from "../modules/users/user.interface";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from 'bcryptjs'
+import statusCode from 'http-status-codes'
 
 // For User Login Creadential
 passport.use(
@@ -15,17 +16,29 @@ passport.use(
         try {
             const isUserExist = await User.findOne({ email })
             if (!isUserExist) {
-                return done(null, false, {message: "User dose not exist!"})
+                return done(null, false, { message: "User dose not exist!" })
+            }
+
+            if (!isUserExist.isVerified) {
+                return done(null, false, { message: "This user are not verified!" })
+            }
+
+            if (isUserExist.isActive === IsActive.INACTIVE || isUserExist.isActive === IsActive.BLOCKED) {
+                return done(null, false, { message: `This use is ${isUserExist.isActive}` })
+            }
+
+            if (isUserExist.isDeleted) {
+                return done(null, false, { message: "This user already deleted!" })
             }
 
             const isGoogleAuthentic = isUserExist.auth.some(providerObject => providerObject.provider === "google")
-            if(isGoogleAuthentic && !isUserExist.password){
-                return done(null, false, {message: "You are authenticated by Google!"})
+            if (isGoogleAuthentic && !isUserExist.password) {
+                return done(null, false, { message: "You are authenticated by Google!" })
             }
 
             const isPasswordMatched = await bcrypt.compare(password as string, isUserExist.password as string)
             if (!isPasswordMatched) {
-                return done(null, false, {message: "Password dose not matched!!"})
+                return done(null, false, { message: "Password dose not matched!!" })
             }
 
             return done(null, isUserExist)
@@ -49,6 +62,19 @@ passport.use(
             }
 
             let user = await User.findOne({ email })
+
+            if (user && !user.isVerified) {
+                return done(null, false, { message: "This user are not verified!" })
+            }
+
+            if (user && (user.isActive === IsActive.INACTIVE || user.isActive === IsActive.BLOCKED)) {
+                return done(null, false, { message: `This use is ${user.isActive}` })
+            }
+
+            if (user && user.isDeleted) {
+                return done(null, false, { message: "This user already deleted!" })
+            }
+
             if (!user) {
                 user = await User.create({
                     email,
