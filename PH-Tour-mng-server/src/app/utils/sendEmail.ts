@@ -5,8 +5,7 @@ import path from 'path'
 import ejs from 'ejs'
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    // host: envVars.EMAIL_SENDER.SMTP_HOST,
+    host: envVars.EMAIL_SENDER.SMTP_HOST,
     port: Number(envVars.EMAIL_SENDER.SMTP_PORT),
     secure: true,
     auth: {
@@ -49,7 +48,7 @@ export const sendEmail = async ({
                 contentType: attachment.contentType
             }))
         })
-        console.log(`\u2709\uFE0F Email sent to ${to}: ${info.messageId}`);
+        // console.log(`\u2709\uFE0F Email sent to ${to}: ${info.messageId}`);
     } catch (error: any) {
         throw new AppError(401, "Email sending error")
     }
