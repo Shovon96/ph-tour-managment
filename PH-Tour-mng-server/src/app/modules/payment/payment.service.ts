@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken"
 import { uploadBufferToCloudinary } from "../../config/cloudinary.config"
 import AppError from "../../errorHalpers/AppError"
 import { generatePdf, IInvoiceData } from "../../utils/invoice"
@@ -8,6 +9,7 @@ import { ISSLCommerz } from "../sslCommerz/sslCommerz.interface"
 import { SSLService } from "../sslCommerz/sslCommerz.service"
 import { ITour } from "../tour/tour.interface"
 import { IUser } from "../users/user.interface"
+import { User } from "../users/user.model"
 import { PAYMENT_STATUS } from "./payment.interface"
 import { Payment } from "./payment.model"
 import statusCode from 'http-status-codes'
@@ -176,10 +178,29 @@ const cancelPayment = async (query: Record<string, string>) => {
 
 }
 
+const getInvoiceDownloadUrl = async (paymentId: string,) => {
+    // const user = await User.findById(userId)
+    // if (!user) {
+    //     throw new AppError(statusCode.NOT_FOUND, "You are not valid user!")
+    // }
+
+    const payment = await Payment.findById(paymentId).select("invoiceURL")
+    if (!payment) {
+        throw new AppError(statusCode.NOT_FOUND, "Payment not found!")
+    }
+
+    if (!payment.invoiceURL) {
+        throw new AppError(statusCode.NOT_FOUND, "No invoice found!")
+    }
+
+    return payment.invoiceURL
+}
+
 
 export const PaymentService = {
     initPayment,
     successPayment,
     failPayment,
-    cancelPayment
+    cancelPayment,
+    getInvoiceDownloadUrl
 }

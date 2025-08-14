@@ -3,6 +3,7 @@ import { PaymentService } from "./payment.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { envVars } from "../../config/env";
 import { sendResponse } from "../../utils/sendResponse";
+import { JwtPayload } from "jsonwebtoken";
 
 const initPayment = catchAsync(async (req: Request, res: Response) => {
     const bookingId = req.params.bookingId
@@ -51,10 +52,22 @@ const cancelPayment = catchAsync(async (req: Request, res: Response) => {
     }
 })
 
+const getInvoiceDownloadUrl = catchAsync(async (req: Request, res: Response) => {
+    const { paymentId } = req.params
+    const result = await PaymentService.getInvoiceDownloadUrl(paymentId)
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "Invoice download link retrive successfully",
+        data: result,
+    });
+})
+
 
 export const PaymentController = {
     initPayment,
     successPayment,
     failPayment,
-    cancelPayment
+    cancelPayment,
+    getInvoiceDownloadUrl
 }
