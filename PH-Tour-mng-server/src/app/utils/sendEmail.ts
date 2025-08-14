@@ -6,6 +6,7 @@ import ejs from 'ejs'
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
+    // host: envVars.EMAIL_SENDER.SMTP_HOST,
     port: Number(envVars.EMAIL_SENDER.SMTP_PORT),
     secure: true,
     auth: {

@@ -77,17 +77,24 @@ const changePassword = async (newPassword: string, oldPassword: string, decodedT
     user!.save()
 }
 
-const resetPassword = async (newPassword: string, oldPassword: string, decodedToken: JwtPayload) => {
+const resetPassword = async (payload: Record<string, any>, decodedToken: JwtPayload) => {
 
-    // const user = await User.findById(decodedToken.userId);
-    // const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
+    if (payload.id != decodedToken.userId) {
+        throw new AppError(401, "You can not reset this pasword!")
+    }
 
-    // if(!isOldPasswordMatch){
-    //     throw new AppError(statusCode.UNAUTHORIZED, "Old password does not matched!")
-    // }
+    const isUserExist = await User.findById(decodedToken.userId)
+    if (!isUserExist) {
+        throw new AppError(401, "User does not exist!")
+    }
 
-    // user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
-    // user!.save()
+    const hashPassword = await bcrypt.hash(payload.newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+
+    isUserExist.password = hashPassword
+    isUserExist.save()
+
+
+
 }
 
 const forgotPassword = async (email: string) => {
