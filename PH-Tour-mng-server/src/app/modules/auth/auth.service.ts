@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import Jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcryptjs'
 import statusCode from "http-status-codes";

@@ -1,4 +1,5 @@
 import { envVars } from "../config/env"
+import AppError from "../errorHalpers/AppError"
 import { IAuthProvider, IUser, Role } from "../modules/users/user.interface"
 import { User } from "../modules/users/user.model"
 import bcrypt from 'bcryptjs'
@@ -30,6 +31,6 @@ export const seedSuperAdmin = async () => {
         console.log('Super admin created..')
         
     } catch (error) {
-
+        throw new AppError(401, "Something error creating super admin!")
     }
 }
