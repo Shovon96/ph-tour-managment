@@ -167,8 +167,102 @@ const getTourStats = async () => {
     }
 }
 
+const getBookingStats = async () => {
+    const totalBooingPromise = Booking.countDocuments()
+
+    const totalBookingByStatusPromise = Booking.aggregate([
+        // stage-1: group stage
+        {
+            $group: {
+                _id: "$status",
+                count: { $sum: 1 }
+            }
+        }
+    ])
+
+    const bookingsPerTourPromise = Booking.aggregate([
+        // stage-1: group stage
+        {
+            $group: {
+                _id: "$tour",
+                bookingCount: { $sum: 1 }
+            }
+        },
+        // stage-2: sort
+        {
+            $sort: { bookingCount: -1 }
+        },
+        // stage-3: limit
+        {
+            $limit: 10
+        },
+        // stage-4: lookup
+        {
+            $lookup: {
+                from: "tours",
+                localField: "_id",
+                foreignField: "_id",
+                as: "tour"
+            }
+        },
+        // stage-5: unwind tours
+        {
+            $unwind: "$tour"
+        },
+        // stage-6: Project tour
+        {
+            $project: {
+                _id: 1,
+                bookingCount: 1,
+                "tour.title": 1,
+                "tour.slug": 1
+            }
+        }
+    ])
+
+    const avgGuestCountPerBookingPromise = Booking.aggregate([
+        {
+            $group: {
+                _id: null,
+                avgGuestCount: { $avg: "$guestCount" }
+            }
+        }
+    ])
+
+    const bookingLastSevenDaysPromise = Booking.countDocuments({
+        createdAt: { $gte: sevenDaysAgo }
+    })
+
+    const bookingLastThirtyDaysPromise = Booking.countDocuments({
+        createdAt: { $gte: thirtyDaysAgo }
+    })
+
+    const totalBookingByUniqueUsersPromise = Booking.distinct("user").then((user: any) => user.length)
+
+    const [totalBooing, totalBookingByStatus, bookingsPerTour, avgGuestCountPerBooking, bookingLastSevenDays, bookingLastThirtyDays, totalBookingByUniqueUsers] = await Promise.all([
+        totalBooingPromise,
+        totalBookingByStatusPromise,
+        bookingsPerTourPromise,
+        avgGuestCountPerBookingPromise,
+        bookingLastSevenDaysPromise,
+        bookingLastThirtyDaysPromise,
+        totalBookingByUniqueUsersPromise
+    ])
+
+    return {
+        totalBooing,
+        totalBookingByStatus,
+        bookingsPerTour,
+        avgGuestCountPerBooking: avgGuestCountPerBooking[0].avgGuestCount,
+        bookingLastSevenDays,
+        bookingLastThirtyDays,
+        totalBookingByUniqueUsers
+    }
+}
+
 
 export const StatsService = {
     getUserStats,
-    getTourStats
+    getTourStats,
+    getBookingStats
 }
