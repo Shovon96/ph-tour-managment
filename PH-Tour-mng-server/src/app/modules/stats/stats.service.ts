@@ -1,3 +1,5 @@
+import { Aggregate } from "mongoose"
+import { Tour } from "../tour/tour.model"
 import { IsActive } from "../users/user.interface"
 import { User } from "../users/user.model"
 
@@ -44,7 +46,33 @@ const getUserStats = async () => {
     }
 }
 
+const getTourStats = async () => {
+    const totalTourPromise = Tour.countDocuments()
+
+    const totalTourByTourTypePromise = Tour.aggregate([
+        {
+            $lookup: {
+                from: "tourtypes",
+                localField: "tourType",
+                foreignField: "_id",
+                as: "type"
+            }
+        }
+    ])
+
+    const [totalTour, totalTourByTourType] = await Promise.all([
+        totalTourPromise,
+        totalTourByTourTypePromise
+    ])
+
+    return {
+        totalTour,
+        totalTourByTourType
+    }
+}
+
 
 export const StatsService = {
-    getUserStats
+    getUserStats,
+    getTourStats
 }
