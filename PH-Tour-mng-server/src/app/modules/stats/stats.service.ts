@@ -3,6 +3,8 @@ import { Tour } from "../tour/tour.model"
 import { IsActive } from "../users/user.interface"
 import { User } from "../users/user.model"
 import { Booking } from "../booking/booking.model"
+import { Payment } from "../payment/payment.model"
+import { PAYMENT_STATUS } from "../payment/payment.interface"
 
 
 const now = new Date()
@@ -260,9 +262,72 @@ const getBookingStats = async () => {
     }
 }
 
+const getPaymentStats = async () => {
+    const totalPaymentPromise = Payment.countDocuments()
+
+    const totalPaymentByStatusPromise = Payment.aggregate([
+        {
+            $group: {
+                _id: "$status",
+                count: { $sum: 1 }
+            }
+        },
+    ])
+
+    const totalRevenuePromise = Payment.aggregate([
+        // stage-1: match payment status
+        {
+            $match: { status: PAYMENT_STATUS.PAID }
+        },
+        // stage-2: group
+        {
+            $group: {
+                _id: null,
+                totalRevenue: { $sum: "$amount" }
+            }
+        }
+
+    ])
+
+    const avgPaymentAmountPromise = Payment.aggregate([
+        {
+            $group: {
+                _id: null,
+                avgPaymentAmount: { $avg: "$amount" }
+            }
+        }
+    ])
+
+    const paymentGatewayDataPromise = Payment.aggregate([
+        {
+            $group: {
+                _id: { $ifNull: ["$paymentGatewayData.status", "UNKNOWN"] },
+                count: { $sum: 1 }
+            }
+        }
+    ])
+
+    const [totalPayment, totalPaymentByStatus, totalRevenue, avgPaymentAmount, paymentGatewayData] = await Promise.all([
+        totalPaymentPromise,
+        totalPaymentByStatusPromise,
+        totalRevenuePromise,
+        avgPaymentAmountPromise,
+        paymentGatewayDataPromise
+    ])
+
+    return {
+        totalPayment,
+        totalPaymentByStatus,
+        totalRevenue,
+        avgPaymentAmount,
+        paymentGatewayData
+    }
+}
+
 
 export const StatsService = {
     getUserStats,
     getTourStats,
-    getBookingStats
+    getBookingStats,
+    getPaymentStats
 }
