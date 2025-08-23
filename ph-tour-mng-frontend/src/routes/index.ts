@@ -5,6 +5,12 @@ import { createBrowserRouter } from "react-router";
 export const routes = createBrowserRouter([
     {
         Component: App,
-        path: '/'
+        path: '/',
+        children: [
+            // {
+            //     path: 'about',
+            //     element: <About />,
+            // }
+        ]
     },
 ])
