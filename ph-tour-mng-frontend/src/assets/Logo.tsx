@@ -1,8 +1,17 @@
+import { useTheme } from "@/providers/Theme.Provider";
 
 export default function Logo() {
     return (
         <div>
-            <img src="https://res.cloudinary.com/dpfdsilzj/image/upload/v1755986050/logoipsum-custom-logo_rncabj.svg" alt="Logo" />
+            <img
+                className="h-8"
+                src={
+                    useTheme().theme === "dark"
+                        ? "https://res.cloudinary.com/dpfdsilzj/image/upload/v1756037749/logoipsum-custom-logo_1_lo7sup.svg"
+                        : "https://res.cloudinary.com/dpfdsilzj/image/upload/v1755986050/logoipsum-custom-logo_rncabj.svg"
+                }
+                alt="Logo"
+            />
         </div>
     )
 }

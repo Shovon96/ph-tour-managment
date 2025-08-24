@@ -8,7 +8,7 @@ interface IProps {
 
 export default function MainLayout({ children }: IProps) {
     return (
-        <div className=" min-h-screen flex flex-col">
+        <div className=" min-h-screen flex flex-col container m-auto">
             <Navbar />
             <div className="grow-1 min-h-screen">{children}</div>
             <Footer />

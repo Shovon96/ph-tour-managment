@@ -1,4 +1,4 @@
-import InfoMenu from "@/components/info-menu"
+// import InfoMenu from "@/components/info-menu"
 import NotificationMenu from "@/components/notification-menu"
 import UserMenu from "@/components/user-menu"
 import { Button } from "@/components/ui/button"
@@ -13,8 +13,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-// import Logo from "@/assets/logo"
-import Logo from "../logo"
+import Logo from "@/assets/Logo"
+import { ModeToggle } from "./ModeToggler"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -105,7 +105,8 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             {/* Info menu */}
-            <InfoMenu />
+            {/* <InfoMenu /> */}
+            <ModeToggle />
             {/* Notification */}
             <NotificationMenu />
           </div>
