@@ -15,13 +15,14 @@ import {
 } from "@/components/ui/popover"
 import Logo from "@/assets/Logo"
 import { ModeToggle } from "./ModeToggler"
+import { Link } from "react-router"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home" },
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/all-tours", label: "All Tours" },
+  { href: "/contact", label: "Contact" },
 ]
 
 export default function Navbar() {
@@ -71,7 +72,7 @@ export default function Navbar() {
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
                       <NavigationMenuLink href={link.href} className="py-1.5">
-                        {link.label}
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -90,10 +91,9 @@ export default function Navbar() {
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                      className="text-foreground hover:text-primary py-1.5 font-medium"
                     >
-                      {link.label}
+                      <Link to={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
@@ -104,14 +104,21 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {/* Info menu */}
-            {/* <InfoMenu /> */}
+            {/* Theme toggler */}
             <ModeToggle />
             {/* Notification */}
             <NotificationMenu />
           </div>
           {/* User menu */}
+          {/* {
+            user && <UserMenu /> ? <UserMenu /> : <Link to={"/login"}>
+              <Button variant="outline" className="cursor-pointer hover:bg-muted">Login</Button>
+            </Link>
+          } */}
           <UserMenu />
+          <Link to={"/login"}>
+            <Button variant="outline" className="cursor-pointer hover:bg-muted">Login</Button>
+          </Link>
         </div>
       </div>
     </header>
