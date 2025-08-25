@@ -1,7 +1,7 @@
 import TravelRegister from "@/assets/images-and-logos/waterfall-with-guy-register-image.jpg"
 import Logo from "@/assets/Logo";
+import { RegisterForm } from "@/components/modules/authentication/Register.Form";
 import { Link } from "react-router";
-// import { RegisterForm } from "@/components/modules/Authentication/RegisterForm";
 
 export default function Register() {
   return (
@@ -21,7 +21,7 @@ export default function Register() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            {/* <RegisterForm /> */}
+            <RegisterForm />
           </div>
         </div>
       </div>

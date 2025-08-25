@@ -8,11 +8,12 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
-// import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useLoginMutation } from "@/redux/features/auth.api";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 export function LoginForm({
     className,
@@ -20,20 +21,20 @@ export function LoginForm({
 }: React.HTMLAttributes<HTMLDivElement>) {
     const navigate = useNavigate();
     const form = useForm();
-    // const [login] = useLoginMutation();
-    // const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    //     try {
-    //         const res = await login(data).unwrap();
-    //         console.log(res);
-    //     } catch (err) {
-    //         console.error(err);
+    const [login] = useLoginMutation();
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        try {
+            const res = await login(data).unwrap();
+            console.log(res);
+        } catch (err) {
+            console.error(err);
 
-    //         if (err.status === 401) {
-    //             toast.error("Your account is not verified");
-    //             navigate("/verify", { state: data.email });
-    //         }
-    //     }
-    // };
+            if ((err as any).status === 401) {
+                toast.error("Your account is not verified");
+                navigate("/verify", { state: data.email });
+            }
+        }
+    };
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -71,12 +72,7 @@ export function LoginForm({
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="********"
-                                            {...field}
-                                            value={field.value || ""}
-                                        />
+                                        <Password {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
