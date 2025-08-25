@@ -25,11 +25,16 @@ export function LoginForm({
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
             const res = await login(data).unwrap();
-            console.log(res);
+            if (res.success) {
+                toast.success("Login Successful");
+                navigate("/");
+            }
         } catch (err) {
             console.error(err);
 
-            if ((err as any).status === 401) {
+            if ((err as any).data.message === "Password dose not matched!!") {
+                toast.error("Password does not match");
+            } else if ((err as any).status === 401) {
                 toast.error("Your account is not verified");
                 navigate("/verify", { state: data.email });
             }
