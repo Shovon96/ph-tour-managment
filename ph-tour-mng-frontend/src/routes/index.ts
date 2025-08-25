@@ -1,6 +1,7 @@
 import App from "@/App";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Verify from "@/pages/Verify";
 import { createBrowserRouter } from "react-router";
 
 
@@ -22,5 +23,9 @@ export const routes = createBrowserRouter([
     {
         Component: Register,
         path: '/register'
+    },
+    {
+        Component: Verify,
+        path: '/verify'
     }
 ])
