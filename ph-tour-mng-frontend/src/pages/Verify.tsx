@@ -23,9 +23,9 @@ import {
 } from "@/components/ui/input-otp";
 import { cn } from "@/lib/utils";
 import {
-  useSendOtpMutation,
-  useVerifyOtpMutation,
-} from "@/redux/features/auth/auth.api";
+  useSendOTPMutation,
+  useVerifyOTPMutation,
+} from "@/redux/features/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dot } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -44,8 +44,8 @@ export default function Verify() {
   const location = useLocation();
   const [email] = useState(location.state);
   const [confirmed, setConfirmed] = useState(false);
-  const [sendOtp] = useSendOtpMutation();
-  const [verifyOtp] = useVerifyOtpMutation();
+  const [sendOtp] = useSendOTPMutation();
+  const [verifyOtp] = useVerifyOTPMutation();
   const [timer, setTimer] = useState(5);
 
   const form = useForm<z.infer<typeof FormSchema>>({
