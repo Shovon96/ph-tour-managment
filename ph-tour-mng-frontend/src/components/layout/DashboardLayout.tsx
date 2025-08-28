@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Outlet } from "react-router"
 
-export default function Page() {
+export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />

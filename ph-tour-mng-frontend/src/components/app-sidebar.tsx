@@ -13,37 +13,54 @@ import {
 } from "@/components/ui/sidebar"
 import Logo from "@/assets/Logo"
 import { Link } from "react-router"
+import { useUseInfoQuery } from "@/redux/features/auth.api"
 
 // This is sample data.
-const data = {
+const dashboardData = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Getting Started",
+      title: "Dashboard",
       url: "#",
       items: [
         {
-          title: "Installation",
-          url: "#",
-        },
+          title: "Analytics",
+          url: "/admin/analytics",
+        }
+      ],
+    },
+    {
+      title: "Tour Management",
+      url: "#",
+      items: [
         {
-          title: "Project Structure",
-          url: "#",
-        },
+          title: "Add Tour",
+          url: "/admin/add-tour",
+        }
       ],
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const { data } = useUseInfoQuery(undefined)
+  console.log(data)
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Logo />
+        <Link to={"/"}>
+          <Logo />
+        </Link>
       </SidebarHeader>
+      <div className="flex items-center my-2 gap-4 justify-center">
+        <img className="rounded-full h-8 w-8" src="https://github.com/shadcn.png" alt="" />
+        <p className="text-center">{data?.data?.name}</p>
+      </div>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {dashboardData.navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
