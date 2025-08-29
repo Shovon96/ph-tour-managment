@@ -7,6 +7,10 @@ import { generateRoutes } from "@/utils/generate.route";
 import { createBrowserRouter, redirect } from "react-router";
 import { adminSidebarItems } from "./adminSidebar.Items";
 import { userSidebarItems } from "./userSidebar.items"
+import { authValidation } from "@/utils/auth.validation";
+import { Role } from "@/constants/role";
+import type { IRole } from "@/types/index.type";
+import Unauthorized from "@/pages/Unauthorize";
 
 export const routes = createBrowserRouter([
     {
@@ -20,7 +24,7 @@ export const routes = createBrowserRouter([
         ]
     },
     {
-        Component: DashboardLayout,
+        Component: authValidation(DashboardLayout, (Role.admin as IRole) || (Role.superAdmin as IRole)),
         path: '/admin',
         children: [
             { index: true, loader: () => redirect("analytics") },
@@ -46,5 +50,9 @@ export const routes = createBrowserRouter([
     {
         Component: Verify,
         path: '/verify'
+    },
+    {
+        Component: Unauthorized,
+        path: '/unauthorized'
     }
 ])
