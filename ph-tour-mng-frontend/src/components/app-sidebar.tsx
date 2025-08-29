@@ -14,38 +14,17 @@ import {
 import Logo from "@/assets/Logo"
 import { Link } from "react-router"
 import { useUseInfoQuery } from "@/redux/features/auth.api"
+import { adminSidebarItems } from "@/routes/adminSidebar.Items"
 
 // This is sample data.
 const dashboardData = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      items: [
-        {
-          title: "Analytics",
-          url: "/admin/analytics",
-        }
-      ],
-    },
-    {
-      title: "Tour Management",
-      url: "#",
-      items: [
-        {
-          title: "Add Tour",
-          url: "/admin/add-tour",
-        }
-      ],
-    },
-  ],
+  navMain: adminSidebarItems
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const { data } = useUseInfoQuery(undefined)
-  console.log(data)
 
   return (
     <Sidebar {...props}>
