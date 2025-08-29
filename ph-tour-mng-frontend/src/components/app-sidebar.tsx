@@ -14,17 +14,16 @@ import {
 import Logo from "@/assets/Logo"
 import { Link } from "react-router"
 import { useUseInfoQuery } from "@/redux/features/auth.api"
-import { adminSidebarItems } from "@/routes/adminSidebar.Items"
+import { getSidebarItemsByRole } from "@/utils/getSidebar.role"
 
-// This is sample data.
-const dashboardData = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: adminSidebarItems
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const { data } = useUseInfoQuery(undefined)
+  const { data: userData } = useUseInfoQuery(undefined)
+  const dashboardData = {
+  navMain: getSidebarItemsByRole(userData?.data?.role)
+
+}
 
   return (
     <Sidebar {...props}>
@@ -35,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <div className="flex items-center my-2 gap-4 justify-center">
         <img className="rounded-full h-8 w-8" src="https://github.com/shadcn.png" alt="" />
-        <p className="text-center">{data?.data?.name}</p>
+        <p className="text-center">{userData?.data?.name}</p>
       </div>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}

@@ -1,4 +1,4 @@
-import type { ISidebarItems } from "@/types/sidebarItems.type"
+import type { ISidebarItems } from "@/types/index.type"
 
 export const generateRoutes = (sidebarItems: ISidebarItems[]) => {
     return sidebarItems.flatMap(section => section.items.map(item => ({

@@ -1,6 +1,6 @@
 import AddTour from "@/pages/admin/AddTour";
 import Analytics from "@/pages/admin/Analytics";
-import type { ISidebarItems } from "@/types/sidebarItems.type";
+import type { ISidebarItems } from "@/types/index.type";
 
 export const adminSidebarItems: ISidebarItems[] = [
     {

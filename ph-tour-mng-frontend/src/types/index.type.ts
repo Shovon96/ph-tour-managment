@@ -9,3 +9,5 @@ export interface ISidebarItems {
         component: ComponentType;
     }[]
 }
+
+export type IRole = "SUPER_ADMIN" | "GUIDE" | "ADMIN" | "USER"
