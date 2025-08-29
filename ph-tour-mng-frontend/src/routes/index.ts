@@ -4,10 +4,9 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Verify from "@/pages/Verify";
 import { generateRoutes } from "@/utils/generate.route";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import { adminSidebarItems } from "./adminSidebar.Items";
-import { userSidebarItems } from "./userSidebar.items";
-
+import { userSidebarItems } from "./userSidebar.items"
 
 export const routes = createBrowserRouter([
     {
@@ -23,12 +22,18 @@ export const routes = createBrowserRouter([
     {
         Component: DashboardLayout,
         path: '/admin',
-        children: [...generateRoutes(adminSidebarItems)]
+        children: [
+            { index: true, loader: () => redirect("analytics") },
+            ...generateRoutes(adminSidebarItems)
+        ]
     },
     {
         Component: DashboardLayout,
         path: '/users',
-        children: [...generateRoutes(userSidebarItems)]
+        children: [
+            { index: true, loader: () => redirect("booking") },
+            ...generateRoutes(userSidebarItems)
+        ]
     },
     {
         Component: Login,

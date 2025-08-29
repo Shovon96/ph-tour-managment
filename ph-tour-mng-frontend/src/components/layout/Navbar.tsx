@@ -23,11 +23,13 @@ import { Role } from "@/constants/role"
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
-  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/all-tours", label: "All Tours", role: "PUBLIC" },
   { href: "/admin", label: "Dashboard", role: Role.admin },
   { href: "/admin", label: "Dashboard", role: Role.superAdmin },
-  { href: "/user", label: "Dashboard", role: Role.user },
-];
+  { href: "/users", label: "Dashboard", role: Role.user },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/contact", label: "Contact", role: "PUBLIC" },
+]
 
 export default function Navbar() {
 
@@ -86,21 +88,22 @@ export default function Navbar() {
                   {navigationLinks.map((link, index) => (
                     <>
                       {link.role === "PUBLIC" && (
-                        <NavigationMenuItem key={index}>
-                          <NavigationMenuLink
-                            asChild
-                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                          >
+                        <NavigationMenuItem key={index} className="w-full">
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
                             <Link to={link.href}>{link.label}</Link>
                           </NavigationMenuLink>
                         </NavigationMenuItem>
                       )}
-                      {link.role === data?.data?.role && (
-                        <NavigationMenuItem key={index}>
-                          <NavigationMenuLink
-                            asChild
-                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                          >
+                      {(link.role === data?.data?.role && data?.data?.role === Role.user) && (
+                        <NavigationMenuItem key={index} className="w-full">
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                      {link.role === data?.data?.role && (data?.data?.role === Role.admin || data?.data?.role === Role.superAdmin) && (
+                        <NavigationMenuItem key={index} className="w-full">
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
                             <Link to={link.href}>{link.label}</Link>
                           </NavigationMenuLink>
                         </NavigationMenuItem>
@@ -120,13 +123,29 @@ export default function Navbar() {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink asChild
-                      className="text-foreground hover:text-primary py-1.5 font-medium"
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <>
+                      {link.role === "PUBLIC" && (
+                        <NavigationMenuItem key={index}>
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                      {(link.role === data?.data?.role && data?.data?.role === Role.user) && (
+                        <NavigationMenuItem key={index}>
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                      {link.role === data?.data?.role && (data?.data?.role === Role.admin || data?.data?.role === Role.superAdmin) && (
+                        <NavigationMenuItem key={index}>
+                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                            <Link to={link.href}>{link.label}</Link>
+                          </NavigationMenuLink>
+                        </NavigationMenuItem>
+                      )}
+                    </>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
