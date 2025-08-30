@@ -4,7 +4,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Verify from "@/pages/Verify";
 import { generateRoutes } from "@/utils/generate.route";
-import { createBrowserRouter, redirect } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebar.Items";
 import { userSidebarItems } from "./userSidebar.items"
 import { authValidation } from "@/utils/auth.validation";
@@ -24,18 +24,26 @@ export const routes = createBrowserRouter([
         ]
     },
     {
-        Component: authValidation(DashboardLayout, (Role.admin as IRole) || (Role.superAdmin as IRole)),
+        Component: authValidation(DashboardLayout, Role.superAdmin as IRole),
         path: '/admin',
         children: [
-            { index: true, loader: () => redirect("analytics") },
+            { index: true, element: <Navigate to="/admin/analytics" /> },
             ...generateRoutes(adminSidebarItems)
         ]
     },
     {
-        Component: DashboardLayout,
+        Component: authValidation(DashboardLayout, Role.admin as IRole),
+        path: '/admin',
+        children: [
+            { index: true, element: <Navigate to="/admin/analytics" /> },
+            ...generateRoutes(adminSidebarItems)
+        ]
+    },
+    {
+        Component: authValidation(DashboardLayout, (Role.user as IRole)),
         path: '/users',
         children: [
-            { index: true, loader: () => redirect("booking") },
+            { index: true, element: <Navigate to="/users/booking" /> },
             ...generateRoutes(userSidebarItems)
         ]
     },

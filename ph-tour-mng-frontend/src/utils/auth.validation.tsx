@@ -1,21 +1,23 @@
 import { useUseInfoQuery } from "@/redux/features/auth.api"
 import type { IRole } from "@/types/index.type"
 import type { ComponentType } from "react"
-import { useNavigate } from "react-router"
+import { Navigate } from "react-router"
+import Loader from "./Loader"
 
 export const authValidation = (Component: ComponentType, userRole?: IRole) => {
     return function authWrapper() {
         const { data, isLoading } = useUseInfoQuery(undefined)
-        const navigate = useNavigate()
 
-        if (!isLoading && !data?.data?.email) {
-            navigate("/login")
-            return null
+        if (isLoading) {
+            return <Loader />
         }
 
-        if (userRole && !isLoading && userRole === data?.data?.role) {
-            navigate("/unauthorized")
-            return null
+        if (!isLoading && !data?.data?.email) {
+            return <Navigate to="/login" />;
+        }
+
+        if (userRole && !isLoading && userRole !== data?.data?.role) {
+            return <Navigate to="/unauthorized" />;
         }
 
         return <Component />
