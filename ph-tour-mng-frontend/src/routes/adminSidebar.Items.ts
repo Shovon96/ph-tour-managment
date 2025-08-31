@@ -1,4 +1,4 @@
-import AddDivision from "@/pages/admin/AddDivision";
+import { AddDivision } from "@/pages/admin/AddDivision";
 import { AddTourType } from "@/pages/admin/AddTourType";
 import type { ISidebarItems } from "@/types/index.type";
 import { lazy } from "react";
