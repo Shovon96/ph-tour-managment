@@ -1,3 +1,4 @@
+import { DeleteConfirmModal } from "@/components/DeleteConfirmModal"
 import { AddTourTypeModal } from "@/components/modules/admin/tour-types/AddTourTypeModal"
 import {
     Table,
@@ -8,16 +9,29 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useGetTourTypesQuery } from "@/redux/features/tour.api"
+import { useDeleteTourTypeMutation, useGetTourTypesQuery } from "@/redux/features/tour.api"
 import Loader from "@/utils/Loader"
-import { Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 export function AddTourType() {
 
     const { data, isLoading } = useGetTourTypesQuery(undefined)
+    const [deleteTourType] = useDeleteTourTypeMutation();
 
     if (isLoading) {
         return <Loader />
+    }
+
+    const handleDeleteTourType = async (id: string) => {
+        const toastId = toast.loading("Deleting Tour Type...")
+        try {
+            const res = await deleteTourType(id).unwrap()
+            if (res.success) {
+                toast.success("Tour Type Deleted", { id: toastId })
+            }
+        } catch (error: any) {
+            console.log(error.message)
+        }
     }
 
     return (
@@ -36,11 +50,13 @@ export function AddTourType() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.data?.map((item: { name: string }, index: any) => (
-                            <TableRow key={index}>
+                        {data?.data?.map((item: { name: string, _id: string }) => (
+                            <TableRow key={item._id}>
                                 <TableCell className="font-medium">{item?.name}</TableCell>
                                 <TableCell className="text-right">
-                                    <button className="bg-destructive  px-3 py-1 rounded-md cursor-pointer transition"><Trash2 /></button>
+                                    <DeleteConfirmModal
+                                        onConfirm={() => handleDeleteTourType(item._id)}>
+                                    </DeleteConfirmModal>
                                 </TableCell>
                             </TableRow>
                         ))}
