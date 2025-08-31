@@ -116,36 +116,36 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <div className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </div>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <>
-                      {link.role === "PUBLIC" && (
-                        <NavigationMenuItem key={index}>
-                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
-                            <Link to={link.href}>{link.label}</Link>
-                          </NavigationMenuLink>
-                        </NavigationMenuItem>
-                      )}
-                      {(link.role === data?.data?.role && data?.data?.role === Role.user) && (
-                        <NavigationMenuItem key={index}>
-                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
-                            <Link to={link.href}>{link.label}</Link>
-                          </NavigationMenuLink>
-                        </NavigationMenuItem>
-                      )}
-                      {link.role === data?.data?.role && (data?.data?.role === Role.admin || data?.data?.role === Role.superAdmin) && (
-                        <NavigationMenuItem key={index}>
-                          <NavigationMenuLink asChild href={link.href} className="py-1.5">
-                            <Link to={link.href}>{link.label}</Link>
-                          </NavigationMenuLink>
-                        </NavigationMenuItem>
-                      )}
-                    </>
+                  <div key={index}>
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                    {(link.role === data?.data?.role && data?.data?.role === Role.user) && (
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                    {link.role === data?.data?.role && (data?.data?.role === Role.admin || data?.data?.role === Role.superAdmin) && (
+                      <NavigationMenuItem key={index}>
+                        <NavigationMenuLink asChild href={link.href} className="py-1.5">
+                          <Link to={link.href}>{link.label}</Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                  </div>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>

@@ -21,16 +21,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const { data: userData } = useUseInfoQuery(undefined)
   const dashboardData = {
-  navMain: getSidebarItemsByRole(userData?.data?.role)
+    navMain: getSidebarItemsByRole(userData?.data?.role)
 
-}
+  }
 
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <Link to={"/"}>
-          <Logo />
-        </Link>
+        <Logo />
       </SidebarHeader>
       <div className="flex items-center my-2 gap-4 justify-center">
         <img className="rounded-full h-8 w-8" src="https://github.com/shadcn.png" alt="" />
