@@ -1,6 +1,5 @@
 import { DeleteConfirmModal } from "@/components/DeleteConfirmModal"
 import { AddDivisionModal } from "@/components/modules/admin/division/AddDivisionModal"
-import { AddTourTypeModal } from "@/components/modules/admin/tour-types/AddTourTypeModal"
 import {
     Table,
     TableBody,
@@ -10,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { useGetDivisionsQuery } from "@/redux/features/division.api"
+import { useDeleteDivisionMutation, useGetDivisionsQuery } from "@/redux/features/division.api"
 import Loader from "@/utils/Loader"
 import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
@@ -18,22 +17,23 @@ import { toast } from "sonner"
 export function AddDivision() {
 
     const { data, isLoading } = useGetDivisionsQuery(undefined)
+    const [deleteDivision] = useDeleteDivisionMutation()
 
     if (isLoading) {
         return <Loader />
     }
 
-    // const handleDeleteDivision = async (id: string) => {
-    //     const toastId = toast.loading("Deleting Division...")
-    //     try {
-    //         const res = await deleteTourType(id).unwrap()
-    //         if (res.success) {
-    //             toast.success("Tour Type Deleted", { id: toastId })
-    //         }
-    //     } catch (error: any) {
-    //         console.log(error.message)
-    //     }
-    // }
+    const handleDeleteDivision = async (id: string) => {
+        const toastId = toast.loading("Deleting Division...")
+        try {
+            const res = await deleteDivision(id).unwrap()
+            if (res.success) {
+                toast.success("Division Deleted", { id: toastId })
+            }
+        } catch (error: any) {
+            console.log(error.message)
+        }
+    }
 
     return (
         <div className="max-w-4xl ml-0 md:ml-[10%]">
@@ -56,9 +56,9 @@ export function AddDivision() {
                                 <TableCell className="font-medium">{item?.name}</TableCell>
                                 <TableCell className="text-right">
                                     <Trash2 />
-                                    {/* <DeleteConfirmModal
+                                    <DeleteConfirmModal
                                         onConfirm={() => handleDeleteDivision(item._id)}>
-                                    </DeleteConfirmModal> */}
+                                    </DeleteConfirmModal>
                                 </TableCell>
                             </TableRow>
                         ))}
