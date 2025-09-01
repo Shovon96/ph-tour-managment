@@ -33,7 +33,7 @@ export function AddTourTypeModal() {
         <Dialog open={open} onOpenChange={setOpen}>
             <form>
                 <DialogTrigger asChild>
-                    <Button className="bg-primary border text-foreground px-4 py-2 rounded-md hover:bg-transparent hover:border-primary hover:border hover:rounded-md cursor-pointer">Add Tour Type</Button>
+                    <Button>Add Tour Type</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>

@@ -1,4 +1,5 @@
 import { DeleteConfirmModal } from "@/components/DeleteConfirmModal"
+import { AddDivisionModal } from "@/components/modules/admin/division/AddDivisionModal"
 import { AddTourTypeModal } from "@/components/modules/admin/tour-types/AddTourTypeModal"
 import {
     Table,
@@ -38,7 +39,7 @@ export function AddDivision() {
         <div className="max-w-4xl ml-0 md:ml-[10%]">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold">Total Divisions: {data?.length}</h2>
-                {/* <AddTourTypeModal /> */}
+                <AddDivisionModal />
             </div>
             <div className=" border border-primary p-4 rounded-md shadow-md shadow-primary">
                 <Table>
