@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/table"
 import { useDeleteDivisionMutation, useGetDivisionsQuery } from "@/redux/features/division.api"
 import Loader from "@/utils/Loader"
-import { Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 export function AddDivision() {
@@ -55,7 +54,6 @@ export function AddDivision() {
                             <TableRow key={item._id}>
                                 <TableCell className="font-medium">{item?.name}</TableCell>
                                 <TableCell className="text-right">
-                                    <Trash2 />
                                     <DeleteConfirmModal
                                         onConfirm={() => handleDeleteDivision(item._id)}>
                                     </DeleteConfirmModal>
