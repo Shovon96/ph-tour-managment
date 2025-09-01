@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -15,11 +16,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division.api";
 import { useGetTourTypesQuery } from "@/redux/features/tour.api";
 import { useForm } from "react-hook-form";
+import { CalendarIcon } from "lucide-react";
 
 export default function AddTour() {
 
@@ -74,6 +79,8 @@ export default function AddTour() {
                   </FormItem>
                 )}
               />
+
+              {/* Location and Cost */}
               <div className="flex gap-5">
                 <FormField
                   control={form.control}
@@ -102,6 +109,8 @@ export default function AddTour() {
                   )}
                 />
               </div>
+
+              {/* Departure and Arrival Locations */}
               <div className="flex gap-5">
                 <FormField
                   control={form.control}
@@ -130,6 +139,8 @@ export default function AddTour() {
                   )}
                 />
               </div>
+
+              {/* Division and Tour Type */}
               <div className="flex gap-5">
                 <FormField
                   control={form.control}
@@ -196,6 +207,8 @@ export default function AddTour() {
                   )}
                 />
               </div>
+
+              {/* Max Guests and Minimum Age */}
               <div className="flex gap-5">
                 <FormField
                   control={form.control}
@@ -224,7 +237,9 @@ export default function AddTour() {
                   )}
                 />
               </div>
-              {/* <div className="flex gap-5">
+
+              {/* Start Date and End Date */}
+              <div className="flex gap-5">
                 <FormField
                   control={form.control}
                   name="startDate"
@@ -297,7 +312,7 @@ export default function AddTour() {
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={new Date(field.value)}
+                            selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) =>
                               date <
@@ -313,7 +328,7 @@ export default function AddTour() {
                     </FormItem>
                   )}
                 />
-              </div> */}
+              </div>
 
               {/* <div className="flex gap-5 items-stretch">
                 <FormField
