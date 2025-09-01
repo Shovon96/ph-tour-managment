@@ -11,6 +11,15 @@ export const tourApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["TOUR"],
         }),
+        // Add a new tour
+        addTour: builder.mutation({
+            query: (tour) => ({
+                url: "/tour/create",
+                method: "POST",
+                data: tour,
+            }),
+            invalidatesTags: ["TOUR"],
+        }),
         // Get all tour types
         getTourTypes: builder.query({
             query: () => ({
@@ -33,6 +42,7 @@ export const tourApi = baseApi.injectEndpoints({
 
 export const {
     useAddTourTypeMutation,
+    useAddTourMutation,
     useGetTourTypesQuery,
     useDeleteTourTypeMutation
 } = tourApi;

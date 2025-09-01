@@ -16,20 +16,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division.api";
-import { useGetTourTypesQuery } from "@/redux/features/tour.api";
-import { useForm } from "react-hook-form";
+import { useAddTourMutation, useGetTourTypesQuery } from "@/redux/features/tour.api";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import MultipleImageUploader from "@/components/MultipleImageUploader";
+import { useState } from "react";
+import type { FileMetadata } from "@/hooks/use-file-upload";
+import { toast } from "sonner";
 
 export default function AddTour() {
 
+  const [images, setImages] = useState<(File | FileMetadata)[] | []>([])
+
   const { data: tourTypeData, isLoading: isLoadingTourTypes } = useGetTourTypesQuery(undefined);
   const { data: divisionData, isLoading: isLoadingDivisions } = useGetDivisionsQuery(undefined);
+  const [addTour] = useAddTourMutation();
 
   const divisionOptions = divisionData?.map((division: { _id: string, name: string }) => ({
     value: division._id,
@@ -44,13 +52,52 @@ export default function AddTour() {
   // console.log(divisionOptions)
   // console.log(tourTypeOptions)
 
-  const handleSubmit = (data: any) => {
-    console.log(data);
-  };
-
   const form = useForm({
-
+    defaultValues: {
+      title: "",
+      location: "",
+      costFrom: 0,
+      departureLocation: "",
+      arrivalLocation: "",
+      division: "",
+      tourType: "",
+      maxGuest: 0,
+      minAge: 0,
+      startDate: new Date(),
+      endDate: new Date(),
+      description: "",
+      images: []
+    }
   })
+
+  const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const tourData = {
+      ...data,
+      startDate: formatISO(data.startDate),
+      endDate: formatISO(data.endDate)
+    }
+    const formData = new FormData();
+
+    formData.append("data", JSON.stringify(tourData));
+    images.forEach((image) => formData.append("files", image as File));
+
+    try {
+      const addingToast = toast.loading("Adding Tour...");
+      const res = await addTour(formData).unwrap();
+      if (res.success) {
+        toast.success("Tour Added Successfully!", { id: addingToast });
+        form.reset();
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  // const handleSubmit = (data: any) => {
+  //   console.log(data);
+  // };
+
 
   return (
     <div className="w-full max-w-4xl mx-auto px-5 mt-8 border border-primary p-4 rounded-md shadow-md shadow-primary">
@@ -66,6 +113,8 @@ export default function AddTour() {
               className="space-y-5"
               onSubmit={form.handleSubmit(handleSubmit)}
             >
+
+              {/* Name/Title */}
               <FormField
                 control={form.control}
                 name="title"
@@ -89,7 +138,7 @@ export default function AddTour() {
                     <FormItem className="flex-1">
                       <FormLabel>Location</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -102,7 +151,9 @@ export default function AddTour() {
                     <FormItem className="flex-1">
                       <FormLabel>Cost</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input type="number" {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -217,7 +268,9 @@ export default function AddTour() {
                     <FormItem className="flex-1">
                       <FormLabel>Max Guest</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input type="number" {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -230,7 +283,9 @@ export default function AddTour() {
                     <FormItem className="flex-1">
                       <FormLabel>Minimum Age</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input type="number" {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -330,7 +385,8 @@ export default function AddTour() {
                 />
               </div>
 
-              {/* <div className="flex gap-5 items-stretch">
+              {/* Description and Upload Images */}
+              <div className="flex gap-5 items-stretch">
                 <FormField
                   control={form.control}
                   name="description"
@@ -347,7 +403,7 @@ export default function AddTour() {
                 <div className="flex-1 mt-5">
                   <MultipleImageUploader onChange={setImages} />
                 </div>
-              </div> */}
+              </div>
               <div className="border-t border-muted w-full "></div>
               {/* <div>
                 <div className="flex justify-between">
