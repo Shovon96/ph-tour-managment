@@ -23,8 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { useGetDivisionsQuery } from "@/redux/features/division.api";
 import { useAddTourMutation, useGetTourTypesQuery } from "@/redux/features/tour.api";
-import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
-import { CalendarIcon } from "lucide-react";
+import { useFieldArray, useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { CalendarIcon, CircleX, Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { useState } from "react";
@@ -66,16 +66,27 @@ export default function AddTour() {
       startDate: new Date(),
       endDate: new Date(),
       description: "",
-      images: []
+      images: [],
+      included: [{ value: "" }]
     }
+  })
+
+  const { fields: includedFields,
+    append: appendIncluded,
+    remove: removeIncluded
+  } = useFieldArray({
+    control: form.control,
+    name: "included"
   })
 
   const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
     const tourData = {
       ...data,
       startDate: formatISO(data.startDate),
-      endDate: formatISO(data.endDate)
+      endDate: formatISO(data.endDate),
+      included: data?.included?.map((item: { value: string }) => item.value)
     }
+    // console.log(tourData)
     const formData = new FormData();
 
     formData.append("data", JSON.stringify(tourData));
@@ -404,8 +415,11 @@ export default function AddTour() {
                   <MultipleImageUploader onChange={setImages} />
                 </div>
               </div>
+
               <div className="border-t border-muted w-full "></div>
-              {/* <div>
+
+              {/* Included Fields */}
+              <div>
                 <div className="flex justify-between">
                   <p className="font-semibold">Included</p>
                   <Button
@@ -418,34 +432,52 @@ export default function AddTour() {
                   </Button>
                 </div>
 
-                <div className="space-y-4 mt-4">
-                  {includedFields.map((item, index) => (
-                    <div className="flex gap-2" key={item.id}>
-                      <FormField
-                        control={form.control}
-                        name={`included.${index}.value`}
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                <div className="flex flex-wrap">
+                  {includedFields.map((item, index) => {
+                    const count = includedFields.length
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={cn(
+                          "relative px-2 mt-2",
+                          // width dynamic based on count
+                          count === 1 && "w-full",
+                          count === 2 && "w-1/2",
+                          count === 3 && "w-1/3",
+                          count >= 4 && "w-1/4",
+                          // responsive tweak
+                          "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         )}
-                      />
-                      <Button
-                        onClick={() => removeIncluded(index)}
-                        variant="destructive"
-                        className="!bg-red-700"
-                        size="icon"
-                        type="button"
                       >
-                        <Trash2 />
-                      </Button>
-                    </div>
-                  ))}
+                        <FormField
+                          control={form.control}
+                          name={`included.${index}.value`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input {...field} className="w-full" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          onClick={() => removeIncluded(index)}
+                          variant="destructive"
+                          size="icon"
+                          type="button"
+                          className="absolute right-2 top-2 h-6 w-6 text-foreground bg-transparent hover:bg-border"
+                        >
+                          <CircleX />
+                        </Button>
+                      </div>
+                    )
+                  })}
                 </div>
-              </div> */}
+              </div>
+
+
 
               {/* <div>
                 <div className="flex justify-between">
@@ -581,6 +613,6 @@ export default function AddTour() {
           </Button>
         </CardFooter>
       </Card>
-    </div>
+    </div >
   );
 }
