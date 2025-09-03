@@ -11,16 +11,17 @@ import { authValidation } from "@/utils/auth.validation";
 import { Role } from "@/constants/role";
 import type { IRole } from "@/types/index.type";
 import Unauthorized from "@/pages/Unauthorize";
+import Homepage from "@/pages/home/HomePage";
 
 export const routes = createBrowserRouter([
     {
         Component: App,
         path: '/',
         children: [
-            // {
-            //     path: 'about',
-            //     element: <About />,
-            // }
+            {
+                path: '/',
+                element: <Homepage />,
+            }
         ]
     },
     {

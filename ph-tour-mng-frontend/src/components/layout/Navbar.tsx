@@ -23,7 +23,7 @@ import { Role } from "@/constants/role"
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
-  { href: "/all-tours", label: "All Tours", role: "PUBLIC" },
+  { href: "/tour", label: "All Tours", role: "PUBLIC" },
   { href: "/admin", label: "Dashboard", role: Role.admin },
   { href: "/admin", label: "Dashboard", role: Role.superAdmin },
   { href: "/users", label: "Dashboard", role: Role.user },
