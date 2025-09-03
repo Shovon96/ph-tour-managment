@@ -12,6 +12,7 @@ import { Role } from "@/constants/role";
 import type { IRole } from "@/types/index.type";
 import Unauthorized from "@/pages/Unauthorize";
 import Homepage from "@/pages/home/HomePage";
+import Tours from "@/pages/Tours";
 
 export const routes = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ export const routes = createBrowserRouter([
             {
                 path: '/',
                 element: <Homepage />,
+            },
+            {
+                path: '/tour',
+                element: <Tours />,
             }
         ]
     },
