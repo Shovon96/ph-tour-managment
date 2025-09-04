@@ -48,11 +48,11 @@ export default function Tours() {
                             <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
                                 <div>
                                     <span className="font-medium">From:</span>{" "}
-                                    {item.departureLocation}
+                                    {item.departureLocation || "Dhaka"}
                                 </div>
                                 <div>
                                     <span className="font-medium">To:</span>{" "}
-                                    {item.arrivalLocation}
+                                    {item.arrivalLocation || item.location}
                                 </div>
                                 <div>
                                     <span className="font-medium">Duration:</span>{" "}
