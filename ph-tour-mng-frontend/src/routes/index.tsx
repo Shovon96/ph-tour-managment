@@ -14,6 +14,10 @@ import Unauthorized from "@/pages/Unauthorize";
 import Homepage from "@/pages/home/HomePage";
 import Tours from "@/pages/Tours";
 import TourDetails from "@/pages/TourDetails";
+import Booking from "@/pages/Booking";
+import PaymentSuccess from "@/pages/payment/PaymentSuccess";
+import PaymentFailed from "@/pages/payment/PaymentFailed";
+import PaymentCancel from "@/pages/payment/PaymentCancel";
 
 export const routes = createBrowserRouter([
     {
@@ -73,5 +77,21 @@ export const routes = createBrowserRouter([
     {
         Component: TourDetails,
         path: '/tour/:slug'
-    }
+    },
+    {
+        Component: authValidation(Booking),
+        path: '/booking/:tourId'
+    },
+    {
+        Component: PaymentSuccess,
+        path: '/payment/success'
+    },
+    {
+        Component: PaymentFailed,
+        path: '/payment/fail'
+    },
+    {
+        Component: PaymentCancel,
+        path: '/payment/cancel'
+    },
 ])

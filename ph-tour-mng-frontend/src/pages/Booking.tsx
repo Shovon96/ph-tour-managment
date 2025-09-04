@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useCreateBookingMutation } from "@/redux/features/booking";
 import { useGetAllToursQuery } from "@/redux/features/tour.api";
+import Loader from "@/utils/Loader";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -8,10 +9,8 @@ export default function Booking() {
     const [guestCount, setGuestCount] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
 
-    console.log(totalAmount);
-
-    const { id } = useParams();
-    const { data, isLoading, isError } = useGetAllToursQuery({ _id: id });
+    const { tourId } = useParams();
+    const { data, isLoading, isError } = useGetAllToursQuery({ _id: tourId });
     const [createBooking] = useCreateBookingMutation();
 
     const tourData = data?.[0];
@@ -35,15 +34,16 @@ export default function Booking() {
 
         if (data) {
             bookingData = {
-                tour: id,
+                tour: tourId,
                 guestCount: guestCount,
             };
         }
 
         try {
             const res = await createBooking(bookingData).unwrap();
+            console.log(res)
             if (res.success) {
-                window.open(res.data.paymentUrl);
+                window.open(res.data.paymentURL);
             }
         } catch (err) {
             console.log(err);
@@ -51,7 +51,7 @@ export default function Booking() {
     };
 
     if (isLoading) {
-        return <p>Loading...</p>;
+        return <Loader />
     }
 
     return (
