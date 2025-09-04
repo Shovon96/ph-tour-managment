@@ -11,7 +11,7 @@ export default function Tours() {
     const tourType = searchParams.get("tourType") || undefined;
 
     const { data } = useGetAllToursQuery({ division, tourType });
-    console.log(data)
+    // console.log(data)
 
     return (
         <div className="container mx-auto px-5 py-8 grid grid-cols-12 gap-5">
@@ -77,7 +77,7 @@ export default function Tours() {
                             </div>
 
                             <Button asChild className="w-full">
-                                <Link to={`/tours/${item._id}`}>View Details</Link>
+                                <Link to={`/tour/${item.slug}`}>View Details</Link>
                             </Button>
                         </div>
                     </div>

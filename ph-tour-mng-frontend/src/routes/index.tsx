@@ -13,6 +13,7 @@ import type { IRole } from "@/types/index.type";
 import Unauthorized from "@/pages/Unauthorize";
 import Homepage from "@/pages/home/HomePage";
 import Tours from "@/pages/Tours";
+import TourDetails from "@/pages/TourDetails";
 
 export const routes = createBrowserRouter([
     {
@@ -68,5 +69,9 @@ export const routes = createBrowserRouter([
     {
         Component: Unauthorized,
         path: '/unauthorized'
+    },
+    {
+        Component: TourDetails,
+        path: '/tour/:slug'
     }
 ])
