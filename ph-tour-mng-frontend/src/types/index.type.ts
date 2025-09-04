@@ -1,4 +1,12 @@
 import type { ComponentType } from "react";
+export type { ITourPackage } from "./tour.type";
+
+export interface IResponse<T> {
+    statusCode: number;
+    success: boolean;
+    message: string;
+    data: T;
+}
 
 export interface ISidebarItems {
     title: string;

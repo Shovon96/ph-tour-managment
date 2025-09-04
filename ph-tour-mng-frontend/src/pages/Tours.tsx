@@ -10,16 +10,19 @@ export default function Tours() {
     const division = searchParams.get("division") || undefined;
     const tourType = searchParams.get("tourType") || undefined;
 
-    const { data } = useGetAllToursQuery({ division, tourType });
-    // console.log(data)
+    const { data, isLoading } = useGetAllToursQuery({ division, tourType });
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="container mx-auto px-5 py-8 grid grid-cols-12 gap-5">
             {/* <TourFilters /> */}
             <div className="col-span-9 w-full">
-                {data?.data?.map((item: any) => (
+                {data?.map((item) => (
                     <div
-                        key={item.slug}
+                        key={item._id}
                         className="border border-muted rounded-lg shadow-md overflow-hidden mb-6 flex"
                     >
                         <div className="w-2/5 bg-red-500 flex-shrink-0">
@@ -61,7 +64,7 @@ export default function Tours() {
                             </div>
 
                             <div className="flex flex-wrap gap-2 mb-4">
-                                {item.amenities.slice(0, 3).map((amenity: string, index: number) => (
+                                {item.amenities.slice(0, 3).map((amenity, index) => (
                                     <span
                                         key={index}
                                         className="px-2 py-1 bg-muted/50 text-primary text-xs rounded-full"
