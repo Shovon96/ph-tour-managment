@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useSearchParams } from "react-router";
 import { useGetAllToursQuery } from "@/redux/features/tour.api";
 import TourFilters from "@/components/modules/TourFilters";
+import Loader from "@/utils/Loader";
 
 
 
@@ -14,7 +15,7 @@ export default function Tours() {
     const { data, isLoading } = useGetAllToursQuery({ division, tourType });
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Loader />
     }
 
     return (

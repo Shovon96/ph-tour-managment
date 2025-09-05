@@ -18,8 +18,7 @@ export default function HeroSection() {
         undefined
     );
 
-    const { data: divisionData, isLoading: divisionIsLoading } =
-        useGetDivisionsQuery(undefined);
+    const { data: divisionData} = useGetDivisionsQuery(undefined);
 
     const divisionOption = divisionData?.map(
         (item: { _id: string; name: string }) => ({
@@ -75,7 +74,7 @@ export default function HeroSection() {
 
                             {selectedDivision ? (
                                 <Button asChild>
-                                    <Link to={`/tours?division=${selectedDivision}`}>Search</Link>
+                                    <Link to={`/tour?division=${selectedDivision}`}>Search</Link>
                                 </Button>
                             ) : (
                                 <Button disabled>Search</Button>

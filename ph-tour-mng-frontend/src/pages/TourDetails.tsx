@@ -3,10 +3,12 @@ import { useGetDivisionsQuery } from "@/redux/features/division.api";
 import { useGetAllToursQuery } from "@/redux/features/tour.api";
 import Loader from "@/utils/Loader";
 import { format } from "date-fns";
-import { Link, useParams } from "react-router";
+import { ArrowLeft } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router";
 
 export default function TourDetails() {
     const { slug } = useParams();
+    const navigate = useNavigate()
 
     const { data: tours, isLoading } = useGetAllToursQuery(undefined);
 
@@ -21,9 +23,15 @@ export default function TourDetails() {
         return <Loader />;
     }
 
+    const handleGoBack = () => {
+        navigate(-1)
+    }
 
     return (
         <div className="container mx-auto p-6">
+            <Button onClick={handleGoBack} variant={"outline"} className="border-2 shadow-2xs cursor-pointer shadow-primary mb-4 rounded-full h-10 w-10">
+                <ArrowLeft />
+            </Button>
             {/* Header */}
             <div className="flex justify-between items-center  mb-8">
                 <div>

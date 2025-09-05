@@ -24,18 +24,20 @@ export const tourApi = baseApi.injectEndpoints({
         }),
         // Get all tour types
         getTourTypes: builder.query({
-            query: () => ({
+            query: (params) => ({
                 url: "/tour/tour-types",
-                method: "GET"
+                method: "GET",
+                params
             }),
             providesTags: ["TOUR"],
             transformResponse: (response) => response.data
         }),
         // Get all tours
         getAllTours: builder.query<ITourPackage[], unknown>({
-            query: () => ({
+            query: (params) => ({
                 url: "/tour",
-                method: "GET"
+                method: "GET",
+                params
             }),
             providesTags: ["TOUR"],
             transformResponse: (

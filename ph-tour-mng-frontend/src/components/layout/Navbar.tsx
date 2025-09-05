@@ -43,7 +43,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="border-b px-4 md:px-6 bg-header-foreground">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">

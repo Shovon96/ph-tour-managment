@@ -2,12 +2,14 @@ import { Button } from "@/components/ui/button";
 import { useCreateBookingMutation } from "@/redux/features/booking";
 import { useGetAllToursQuery } from "@/redux/features/tour.api";
 import Loader from "@/utils/Loader";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function Booking() {
     const [guestCount, setGuestCount] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
+    const navigate = useNavigate()
 
     const { tourId } = useParams();
     const { data, isLoading, isError } = useGetAllToursQuery({ _id: tourId });
@@ -49,6 +51,9 @@ export default function Booking() {
             console.log(err);
         }
     };
+    const handleGoBack = () => {
+        navigate(-1)
+    }
 
     if (isLoading) {
         return <Loader />
@@ -70,6 +75,9 @@ export default function Booking() {
 
             {!isLoading && !isError && data!.length > 0 && (
                 <>
+                    <Button onClick={handleGoBack} variant={"outline"} className="border-2 shadow-2xs cursor-pointer shadow-primary mb-4 rounded-full h-10 w-10">
+                        <ArrowLeft />
+                    </Button>
                     {/* Left Section - Tour Summary */}
                     <div className="flex-1 space-y-6">
                         <div>

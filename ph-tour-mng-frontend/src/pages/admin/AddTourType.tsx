@@ -12,10 +12,14 @@ import {
 import { useDeleteTourTypeMutation, useGetTourTypesQuery } from "@/redux/features/tour.api"
 import Loader from "@/utils/Loader"
 import { toast } from "sonner"
+import { useState } from "react"
+import PaginationComponent from "@/utils/Pagination"
 
 export function AddTourType() {
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [limit, setLimit] = useState<number | null>(null);
 
-    const { data, isLoading } = useGetTourTypesQuery(undefined)
+    const { data, isLoading } = useGetTourTypesQuery({ page: currentPage, limit })
     const [deleteTourType] = useDeleteTourTypeMutation();
 
     if (isLoading) {
@@ -33,6 +37,8 @@ export function AddTourType() {
             console.log(error.message)
         }
     }
+
+    const totalPage = data?.meta?.totalPage || 1;
 
     return (
         <div className="max-w-4xl ml-0 md:ml-[10%]">
@@ -63,6 +69,14 @@ export function AddTourType() {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Pagination */}
+            <PaginationComponent
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                setLimit={setLimit}
+                totalPage={totalPage}
+            />
         </div>
     )
 }
