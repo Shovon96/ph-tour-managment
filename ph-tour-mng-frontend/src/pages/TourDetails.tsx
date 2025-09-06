@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useGetDivisionsQuery } from "@/redux/features/division.api";
-import { useGetAllToursQuery } from "@/redux/features/tour.api";
+import { useGetAllToursQuery, useGetTourTypesQuery } from "@/redux/features/tour.api";
 import Loader from "@/utils/Loader";
 import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
@@ -18,6 +18,12 @@ export default function TourDetails() {
         { _id: tourData?.division, fields: "name" },
         { skip: !tourData }
     );
+
+    const { data: tourTypeData } = useGetTourTypesQuery(
+        { _id: tourData?.tourType, fields: "name" },
+        { skip: !tourData }
+    );
+    console.log(tourTypeData?.data[0]?.name)
 
     if (isLoading) {
         return <Loader />;
@@ -90,7 +96,7 @@ export default function TourDetails() {
                             <strong>Division:</strong> {divisionData?.[0]?.name}
                         </p>
                         <p>
-                            <strong>Tour Type:</strong> {tourData?.tourType}
+                            <strong>Tour Type:</strong> {tourTypeData?.data[0]?.name}
                         </p>
                         <p>
                             <strong>Min Age:</strong> {tourData?.minAge} years
